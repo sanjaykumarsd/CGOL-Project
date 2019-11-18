@@ -1,0 +1,147 @@
+package A1;
+
+import java.util.Random;
+public class Cell implements Runnable 
+{
+    public static int myCount = 0;
+    private String name;
+    private int neighbors;
+    private int alive; // 0 is dead; 1 is alive.
+    Random rand = new Random();
+    public Cell (String nm)
+    {
+        name = nm;
+        myCount = rand.nextInt(999);
+        neighbors = 0;
+
+        // 2 because it is exclusive
+        this.setLife(rand.nextInt(2));
+    }
+        private void setLife(int nextInt) {
+	}
+		public void run()
+    {
+        while(Cell.myCount <= 10){
+            try
+            {
+                System.out.println("Expl Thread: " + (++Cell.myCount));
+                Thread.sleep(100);
+            } catch (InterruptedException iex) 
+            {
+                System.out.println("Exception in thread: "+iex.getMessage());
+            }
+        }
+    }
+
+public void checkN(Cell [][] arr, Cell [][] futureGen, int columns, int rows)
+{
+    for (int x = 0; x < rows; x++) 
+    {
+        for (int y = 0; y < columns; y++) 
+        {               
+            arr[x][y].setNeighbors(0);
+
+            // Upper left corner
+            if (x == 0 && y == 0)
+                for (int i = 0; i <= 1; i++)
+                    for (int j = 0; j <= 1; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Upper margin checks
+            if ((x == 0) && (y != 0 && y <= columns - 2))
+                for(int i = 0; i <= 1; i++)
+                    for(int j = -1; j <= 1; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Upper right corner
+            if ((x == 0) && (y == columns - 1))
+                for(int i = 0; i <= 1; i++)
+                    for(int j = -1; j <= 0; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Left margin checks
+            if ((y == 0) && (x != 0 && x <= rows - 2))
+                for (int i = -1; i <= 1; i++)
+                    for (int j = 0; j <= 1; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+
+            // Lower left corner
+            if ((x == rows - 1) && y == 0)
+                for (int i = -1; i <= 0; i++)
+                    for (int j = 0; j <= 1; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Bottom margin checks
+            if ((x == rows - 1) && (y != 0 && y <= columns - 2 ))
+                for (int i = -1; i <= 0; i++)
+                    for (int j = -1; j <= 1; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Lower right corner
+            if ((x == rows - 1) && (y == columns - 1))
+                for (int i = -1; i <= 0; i++)
+                    for (int j = -1; j <= 0; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Right margin checks
+            if ((y == columns - 1) && (x != 0 && x <= rows - 2))
+                for (int i = -1; i <= 1; i++)
+                    for (int j = -1; j <= 0; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Middle area checks ( can check all around now )!
+            if ((x > 0) && (x < rows - 1) && (y > 0) && (y < columns - 1) )
+                for (int i = -1; i <= 1; i++)
+                    for (int j = -1; j <= 1; j++)
+                        if (arr[x + i][y + j].getLife() == 1)
+                            arr[x][y].subNeighbor();
+
+            // Do not add yourself!
+            if (arr[x][y].getLife() == 1)
+                arr[x][y].subNeighbor();
+
+            // Get the new generation through the neighbors
+            if ((arr[x][y].getLife() == 1) && 
+                (arr[x][y].getNeighbors() < 2))
+                futureGen[x][y].setLife(0);
+            else if ((arr[x][y].getLife() == 1) && 
+                     (arr[x][y].getNeighbors() > 3))
+                futureGen[x][y].setLife(0);
+            else if ((arr[x][y].getLife() == 0) && 
+                     (arr[x][y].getNeighbors() == 3))
+                futureGen[x][y].setLife(1);
+            else
+                futureGen[x][y].setLife(arr[x][y].getLife());               
+        }
+    }
+}
+
+private void setNeighbors(int i) {
+
+	
+}
+
+private void subNeighbor() {
+
+	
+}
+
+private int getLife() {
+
+	return 0;
+}
+
+private int getNeighbors() {
+
+	return 0;
+}
+}
